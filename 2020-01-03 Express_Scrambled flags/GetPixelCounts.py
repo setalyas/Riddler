@@ -10,6 +10,8 @@ from PIL import Image
 from os import listdir
 from os.path import isfile, join
 import pickle
+from matplotlib import colors
+from scipy.spatial import cKDTree as KDTree
 
 fldr = 'Flags'
 onlyfiles = [f for f in listdir(fldr) if isfile(join(fldr, f))]
@@ -17,34 +19,7 @@ flags = {}
 for fp in onlyfiles:
     flags[fp[:2]] = ""
     
-# =============================================================================
-# Attempt 1: get counts from palettised form
-# =============================================================================
-
-# Palettised img explainer https://stackoverflow.com/questions/52307290/what-is-the-difference-between-images-in-p-and-l-mode-in-pil/52307690#52307690
-
-for cntry in flags.keys():
-    fp = fldr + '\\' + cntry + '-flag.gif'
-    img = Image.open(fp)
-    pxls = np.array(img.getdata()).flatten()  # in palettised form
-    counts = np.unique(pxls, return_counts=True)[1]
-    flags[cntry] = counts
-
-with open('Outputs\\pixelcounts.pickle', 'wb') as handle:
-    pickle.dump(flags, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    
-"""Upside = quick!
-Downside = no idea how useful it is, if palette refs even transfer across imgs
-"""
-
-# =============================================================================
-# Attempt 2: kdtree to group against known colours
-# =============================================================================
-
 # https://stackoverflow.com/questions/50545192/count-different-colour-pixels-python
-
-from matplotlib import colors
-from scipy.spatial import cKDTree as KDTree
 
 REDUCED_COLOR_SPACE = True
 
