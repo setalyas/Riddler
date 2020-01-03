@@ -18,14 +18,14 @@ onlyfiles = [f for f in listdir(fldr) if isfile(join(fldr, f))]
 flags = {}
 for fp in onlyfiles:
     flags[fp[:2]] = ""
-    
-# https://stackoverflow.com/questions/50545192/count-different-colour-pixels-python
 
+# Try first with reduced colour list, to make easier to human-read output
 REDUCED_COLOR_SPACE = True
 
 # borrow a list of named colors from matplotlib
 if REDUCED_COLOR_SPACE:
-    use_colors = {k: colors.cnames[k] for k in ['red', 'green', 'blue', 'black', 'yellow', 'purple']}
+    use_colors = {k: colors.cnames[k] for k in
+                  ['red', 'green', 'blue', 'black', 'yellow', 'purple']}
 else:
     use_colors = colors.cnames
 
@@ -49,30 +49,21 @@ color_tuples = np.array(color_tuples)
 color_names = list(named_colors)
 color_names.append('no match')
 
-# get example picture
-im = img.getdata().convert('RGB')
-
 # build tree
 tree = KDTree(color_tuples[:-1])
-# tolerance for color match `inf` means use best match no matter how
-# bad it may be
+# tolerance for color match `inf` => use best match no matter how bad it may be
 tolerance = np.inf
-# find closest color in tree for each pixel in picture
-dist, idx = tree.query(im, distance_upper_bound=tolerance)
-# count and reattach names
-counts = dict(zip(color_names, np.bincount(idx.ravel(), None, ncol+1)))
-print(counts)
-
+    
 for cntry in flags.keys():
     fp = fldr + '\\' + cntry + '-flag.gif'
     img = Image.open(fp)
     width, height = img.size
     im = img.getdata().convert('RGB')
+    # find closest color in tree for each pixel in picture
     dist, idx = tree.query(im, distance_upper_bound=tolerance)
+    # count and reattach names
     counts = dict(zip(color_names, np.bincount(idx.ravel(), None, ncol+1)))
     flags[cntry] = {'colours': counts, 'W': width, 'H': height}
-
-"""Cons = lower fidelity, slower. Pros = basically know what it's doing"""
 
 with open('Outputs\\colourcounts.pickle', 'wb') as handle:
     pickle.dump(flags, handle, protocol=pickle.HIGHEST_PROTOCOL)
