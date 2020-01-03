@@ -5,6 +5,6 @@
 This uses Python to:
 
 1. Scrape all country flags from the [CIA World Factbook](https://www.cia.gov/library/publications/the-world-factbook/docs/flagsoftheworld.html)
-2. Decompose each flag into a colour breakdown.
+2. Decompose each flag into a colour breakdown, using a [k-d tree approach](https://stackoverflow.com/a/50545735)
 3. Compare the decompositions for the flags and the scrambled images.
 4. Output the matching flags.
