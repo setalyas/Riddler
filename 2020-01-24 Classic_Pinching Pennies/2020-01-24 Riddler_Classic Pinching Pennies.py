@@ -63,26 +63,21 @@ for x in zip(x_arr, y_arr):
     print(x)
 # All spots are either hot or cold
 
-# https://stackoverflow.com/questions/43971138/python-plotting-colored-grid-based-on-values
-# https://en.wikipedia.org/wiki/Wythoff%27s_game
 def showprintgrid(arr, colmap):
     """Set up an array like a Wythoff board, and plot with provided
     colourmap"""
     arr_flip = np.flipud(arr)  # to make it match normal graph orientation
-
     fig, ax = plt.subplots(figsize=(6,6))
     ax.matshow(arr_flip, cmap=colmap)
     ax.grid(which='major', axis='both', linestyle='-', color='k')
-    
     # draw gridlines
     ax.set_xticks(np.arange(-0.5, penny_max+1, 1))
     ax.set_yticks(np.arange(-0.5, penny_max+1, 1))
     ax.set_xticklabels(np.arange(penny_max+1))
     ax.set_yticklabels(np.arange(penny_max+1)[::-1])
-#    plt.savefig('20200124_Classic_{}.png'.format(namestring))
-#    plt.show()
 
-# create discrete colormap
+
+# Create discrete colormap
 col_rb = colors.ListedColormap(['red', 'blue'])
 showprintgrid(data, col_rb)
 plt.savefig('20200124_Classic_{}.png'.format('AllHotCold'))
@@ -90,8 +85,9 @@ plt.savefig('20200124_Classic_{}.png'.format('AllHotCold'))
 # Which n would be best to pick if you wanted to win?
 best_n = set([])
 for (x, y) in cold:
-    if 20 <= x+y <= 30:
+    if penny_min <= x+y <= penny_max:
         best_n.add(x+y)
+        print((x,y))
 print(best_n)
 
 # grid with only viable colours, for each n combo
