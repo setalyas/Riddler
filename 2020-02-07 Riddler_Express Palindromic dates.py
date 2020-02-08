@@ -17,20 +17,22 @@ remaining = (end-start).days
 
 date = start
 dttypes = {'UK': {'counter': 0, 'fmt': '%d%m%Y',
-                  'printfmt': '%d-%m-%Y', 'matches': set([])},
+                  'printfmt': '%d-%m-%Y', 'matches': []},
            'US': {'counter': 0, 'fmt': '%m%d%Y',
-                  'printfmt': '%m-%d-%Y', 'matches': set([])}}
+                  'printfmt': '%m-%d-%Y', 'matches': []}}
 
 for i in range(remaining): 
     date += dt.timedelta(days=1)
     for region in dttypes.keys():
         fmt = dttypes[region]['fmt']
         if date.strftime(fmt) == reverse(date.strftime(fmt)):
-            dttypes[region]['matches'].add(date)
+            dttypes[region]['matches'].append(date)
             dttypes[region]['counter'] += 1
 
 for region in dttypes.keys():
     counter = dttypes[region]['counter']
-    print('{} palindrome dates this century after 02/02/2020: {}'.format(
+    print('\n{} palindrome dates this century after 02/02/2020: {}'.format(
             region, counter
             ))
+    for i in dttypes[region]['matches']:
+        print(i.strftime(dttypes[region]['printfmt']))
