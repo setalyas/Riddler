@@ -76,7 +76,7 @@ for dt in flag_data:
         aspect = round(width / height,1)
         dt[flag]['aspect'] = aspect
         pixelcount = width * height
-        for c, n in dt[flag]['colours'].items():
+        for c, n in dt[flag]['colours'].items():    
             dt[flag]['colours'][c] = round(n / pixelcount, 2)
 
 # Check close matches
